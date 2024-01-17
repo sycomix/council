@@ -93,7 +93,7 @@ class LLMFilter(FilterBase):
     ) -> List[ScoredChatMessage]:
         parsed = [self._parse_line(line) for line in response.strip().splitlines()]
         answers = [r.unwrap() for r in parsed if r.is_some()]
-        if len(answers) == 0:
+        if not answers:
             raise LLMParsingException("None of your answer could be parsed. Follow exactly formatting instructions.")
 
         messages_to_keep = []
@@ -107,7 +107,7 @@ class LLMFilter(FilterBase):
             except StopIteration:
                 missing.append(idx)
 
-        if len(missing) > 0:
+        if missing:
             raise FilterException(
                 f"Please evaluate ALL {len(messages)} answers. Missing filter responses for {missing} answers."
             )

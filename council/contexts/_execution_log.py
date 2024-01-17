@@ -41,6 +41,4 @@ class ExecutionLog:
         """
         convert into a dictionary
         """
-        result = {"entries": [item.to_dict() for item in self._entries]}
-
-        return result
+        return {"entries": [item.to_dict() for item in self._entries]}

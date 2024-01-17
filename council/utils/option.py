@@ -52,9 +52,7 @@ class Option(Generic[T]):
         Returns:
             T:
         """
-        if self._some is not None:
-            return self._some
-        return default
+        return self._some if self._some is not None else default
 
     def map_or(self, map_func: Callable[[T], R], default: R) -> R:
         """
@@ -68,9 +66,7 @@ class Option(Generic[T]):
             R:
         """
 
-        if self._some is not None:
-            return map_func(self._some)
-        return default
+        return map_func(self._some) if self._some is not None else default
 
     def as_optional(self) -> Optional[T]:
         """

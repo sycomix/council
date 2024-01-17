@@ -34,9 +34,7 @@ class OpenAITokenCounter(LLMessageTokenCounterBase):
         return num_tokens
 
     def count_messages_token(self, messages: Sequence[LLMMessage]) -> int:
-        result = 0
-        for message in messages:
-            result += self.count_message_token(message)
+        result = sum(self.count_message_token(message) for message in messages)
         result += 3  # every reply is primed with <|start|>assistant<|message|>
 
         if 0 < self._limit < result:

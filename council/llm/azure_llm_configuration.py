@@ -69,15 +69,17 @@ class AzureLLMConfiguration(LLMConfigurationBase):
         return self._api_version
 
     def _read_optional_env(self):
-        self.api_version.from_env(_env_var_prefix + "LLM_API_VERSION")
-        self._timeout.from_env(_env_var_prefix + "LLM_TIMEOUT")
+        self.api_version.from_env(f"{_env_var_prefix}LLM_API_VERSION")
+        self._timeout.from_env(f"{_env_var_prefix}LLM_TIMEOUT")
 
     @staticmethod
     def from_env(deployment_name: Optional[str] = None) -> "AzureLLMConfiguration":
-        api_key = read_env_str(_env_var_prefix + "LLM_API_KEY").unwrap()
-        api_base = read_env_str(_env_var_prefix + "LLM_API_BASE").unwrap()
+        api_key = read_env_str(f"{_env_var_prefix}LLM_API_KEY").unwrap()
+        api_base = read_env_str(f"{_env_var_prefix}LLM_API_BASE").unwrap()
         if deployment_name is None:
-            deployment_name = read_env_str(_env_var_prefix + "LLM_DEPLOYMENT_NAME", required=False).unwrap()
+            deployment_name = read_env_str(
+                f"{_env_var_prefix}LLM_DEPLOYMENT_NAME", required=False
+            ).unwrap()
 
         config = AzureLLMConfiguration(api_key=api_key, api_base=api_base, deployment_name=deployment_name)
         config.read_env(env_var_prefix=_env_var_prefix)

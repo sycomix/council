@@ -118,15 +118,15 @@ class PythonCodeVerificationSkill(SkillBase):
         code_lines = self.normalize_snippet(code)
         if self._code_before_line_count > 0:
             actual = "\n".join(code_lines[: self._code_before_line_count])
-            if not actual == self._code_before:
+            if actual != self._code_before:
                 errors.append(ERROR_CODE_STARTS_WITH.format(expected=self._code_before, actual=actual))
 
         if self._code_after_line_count > 0:
             actual = "\n".join(code_lines[-self._code_after_line_count :])
-            if not actual == self._code_after:
+            if actual != self._code_after:
                 errors.append(ERROR_CODE_ENDS_WITH.format(expected=self._code_after, actual=actual))
 
-        if len(errors) > 0:
+        if errors:
             raise Exception("\n".join(errors))
 
     @staticmethod

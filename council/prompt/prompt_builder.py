@@ -57,8 +57,7 @@ class PromptBuilder:
             **kwargs,
         }
 
-        prompt = self._template.render(template_context)
-        return prompt
+        return self._template.render(template_context)
 
     @staticmethod
     def _build_chat_history(context: ContextBase) -> dict[str, Any]:
@@ -69,17 +68,21 @@ class PromptBuilder:
         return {
             "agent": {
                 "messages": [
-                    msg.message for msg in context.chat_history.messages if msg.is_of_kind(ChatMessageKind.Agent)
+                    msg.message
+                    for msg in context.chat_history.messages
+                    if msg.is_of_kind(ChatMessageKind.Agent)
                 ],
                 "last_message": last_agent_message.map_or(lambda m: m.message, ""),
             },
             "user": {
                 "messages": [
-                    msg.message for msg in context.chat_history.messages if msg.is_of_kind(ChatMessageKind.User)
+                    msg.message
+                    for msg in context.chat_history.messages
+                    if msg.is_of_kind(ChatMessageKind.User)
                 ],
                 "last_message": last_user_message.map_or(lambda m: m.message, ""),
             },
-            "messages": [msg for msg in context.chat_history.messages],
+            "messages": list(context.chat_history.messages),
             "last_message": last_message.map_or(lambda m: m.message, ""),
         }
 

@@ -27,10 +27,7 @@ class AnthropicTokenCounter(LLMessageTokenCounterBase):
         self._client = client
 
     def count_messages_token(self, messages: Sequence[LLMMessage]) -> int:
-        tokens = 0
-        for msg in messages:
-            tokens += self._client.count_tokens(msg.content)
-        return tokens
+        return sum(self._client.count_tokens(msg.content) for msg in messages)
 
 
 class AnthropicLLM(LLMBase):

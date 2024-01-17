@@ -32,4 +32,4 @@ class TestLlmOpenAI(unittest.TestCase):
         messages = [LLMMessage.user_message("what are the largest cities in South America")] * 500
         with self.assertRaises(LLMTokenLimitException) as cm:
             _ = self.llm.post_chat_request(LLMContext.empty(), messages)
-        print(str(cm.exception))
+        print(cm.exception)

@@ -14,14 +14,13 @@ class TestParallelFor(RunnerTestCase):
         count = 100
 
         def generator(chain_context: ChainContext) -> Any:
-            for i in range(count):
-                yield i
+            yield from range(count)
 
         instance = ParallelFor(generator, SkillTest("for each", 0.01))
         self.execute(instance, Budget(2))
         self.assertSuccessMessages(["for each" for i in range(count)])
         data = [m.data for m in self.context.current.messages if m.is_ok]
-        self.assertEqual([i for i in range(count)], data)
+        self.assertEqual(list(range(count)), data)
 
     def test_parallel_for_last_throw(self):
         def generator(chain_context: ChainContext):
@@ -62,5 +61,5 @@ class TestParallelFor(RunnerTestCase):
         self.execute(instance, Budget(2, limits=[Consumption(20, "unit", "budget")]))
         self.assertSuccessMessages(["for each" for i in range(count)])
         data = [m.data for m in self.context.current.messages if m.is_ok]
-        self.assertEqual([i for i in range(count)], data)
+        self.assertEqual(list(range(count)), data)
         self.assertEqual(self.context.budget._remaining[0].value, 10)

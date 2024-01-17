@@ -47,10 +47,7 @@ class MockTokenCounter(LLMessageTokenCounterBase):
         self._limit = limit
 
     def count_messages_token(self, messages: Sequence[LLMMessage]) -> int:
-        result = 0
-        for msg in messages:
-            result += len(msg.content)
-
+        result = sum(len(msg.content) for msg in messages)
         if 0 < self._limit < result:
             raise LLMTokenLimitException(token_count=result, limit=self._limit, model="mock")
         return result

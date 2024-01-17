@@ -216,7 +216,11 @@ class ChatMessage:
         return f"{self.kind}: {self.message}"
 
     def to_string(self, max_length: int = 50):
-        message = self.message[:max_length] + "..." if len(self.message) > max_length else self.message
+        message = (
+            f"{self.message[:max_length]}..."
+            if len(self.message) > max_length
+            else self.message
+        )
         return f"Message of kind {self.kind}: {message}"
 
     def to_dict(self) -> Dict[str, Any]:

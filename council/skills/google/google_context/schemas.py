@@ -16,7 +16,7 @@ class ResponseReference:
         self.date = date
 
     def __str__(self):
-        return "ResponseReference(title=" + str(self.title) + " ,url=" + self.url + ", date=" + self.date + " )"
+        return f"ResponseReference(title={str(self.title)} ,url={self.url}, date={self.date} )"
 
     def dict(self) -> Dict[str, Any]:
         return {

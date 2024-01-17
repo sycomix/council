@@ -45,16 +45,14 @@ class LLMProperty:
     def parse(self, value: Any, default: Optional[Any]) -> Any:
         def converter(x: str) -> bool:
             result = x.strip().lower()
-            if result in ["true", "1", "t"]:
+            if result in {"true", "1", "t"}:
                 return True
-            if result in ["false", "0", "f"]:
+            if result in {"false", "0", "f"}:
                 return False
             raise TypeError(x)
 
         try:
-            if self._type is bool:
-                return converter(value)
-            return self._type(value)
+            return converter(value) if self._type is bool else self._type(value)
         except (TypeError, ValueError) as e:
             if default is not None:
                 return default
@@ -95,11 +93,11 @@ class LLMAnswer:
 
     def to_object(self, line: str) -> Optional[Any]:
         d = self.parse_line(line, None)
-        missing_keys = [key.name for key in self._properties if key.name not in d.keys()]
-        if len(missing_keys) > 0:
+        if missing_keys := [
+            key.name for key in self._properties if key.name not in d.keys()
+        ]:
             raise LLMParsingException(f"Missing {missing_keys} in response.")
-        t = self._schema(**d)
-        return t
+        return self._schema(**d)
 
     def parse_line(self, line: str, default: Optional[Any] = "Invalid") -> Dict[str, Any]:
         property_value_pairs = line.split(self.field_separator())
@@ -122,19 +120,20 @@ class LLMAnswer:
     def parse_yaml(self, bloc: str) -> Dict[str, Any]:
         d = yaml.safe_load(bloc)
         properties_dict = {**d}
-        missing_keys = [key.name for key in self._properties if key.name not in properties_dict.keys()]
-        if len(missing_keys) > 0:
+        if missing_keys := [
+            key.name
+            for key in self._properties
+            if key.name not in properties_dict.keys()
+        ]:
             raise LLMParsingException(f"Missing {missing_keys} in response.")
         return properties_dict
 
     def parse_yaml_bloc(self, bloc: str) -> Dict[str, Any]:
         code_bloc = CodeParser.find_first(language="yaml", text=bloc)
-        if code_bloc is not None:
-            return self.parse_yaml(code_bloc.code)
-        return {}
+        return self.parse_yaml(code_bloc.code) if code_bloc is not None else {}
 
     def _find(self, prop: str) -> Optional[LLMProperty]:
-        for p in self._properties:
-            if p.name.casefold() == prop.casefold():
-                return p
-        return None
+        return next(
+            (p for p in self._properties if p.name.casefold() == prop.casefold()),
+            None,
+        )

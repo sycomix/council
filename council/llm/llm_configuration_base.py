@@ -100,12 +100,12 @@ class LLMConfigurationBase(abc.ABC):
         return self._frequency_penalty
 
     def read_env(self, env_var_prefix: str):
-        self.temperature.from_env(env_var_prefix + "LLM_TEMPERATURE")
-        self.max_tokens.from_env(env_var_prefix + "LLM_MAX_TOKENS")
-        self.top_p.from_env(env_var_prefix + "LLM_TOP_P")
-        self.n.from_env(env_var_prefix + "LLM_N")
-        self.presence_penalty.from_env(env_var_prefix + "LLM_PRESENCE_PENALTY")
-        self.frequency_penalty.from_env(env_var_prefix + "LLM_FREQUENCY_PENALTY")
+        self.temperature.from_env(f"{env_var_prefix}LLM_TEMPERATURE")
+        self.max_tokens.from_env(f"{env_var_prefix}LLM_MAX_TOKENS")
+        self.top_p.from_env(f"{env_var_prefix}LLM_TOP_P")
+        self.n.from_env(f"{env_var_prefix}LLM_N")
+        self.presence_penalty.from_env(f"{env_var_prefix}LLM_PRESENCE_PENALTY")
+        self.frequency_penalty.from_env(f"{env_var_prefix}LLM_FREQUENCY_PENALTY")
 
     def build_default_payload(self) -> dict[str, Any]:
         payload: dict[str, Any] = {}

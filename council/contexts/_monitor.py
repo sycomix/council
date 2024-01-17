@@ -49,7 +49,9 @@ class Monitor:
         result = [
             item
             for name, child in self.children.items()
-            for item in child.render_as_text(name + ": ", indent + indent_step, indent_step)
+            for item in child.render_as_text(
+                f"{name}: ", indent + indent_step, indent_step
+            )
         ]
 
         return [current] + result
@@ -57,6 +59,8 @@ class Monitor:
     def render_as_dict(self, include_children: bool = True) -> Dict[str, Any]:
         children = []
         if include_children:
-            for name, child in self.children.items():
-                children.append({"name": name, "value": child.render_as_dict()})
+            children.extend(
+                {"name": name, "value": child.render_as_dict()}
+                for name, child in self.children.items()
+            )
         return {"properties": self.properties, "type": self.type, "baseType": self.base_type, "children": children}
