@@ -70,9 +70,9 @@ def read_env_float(name: str, required: bool = True, default: Optional[float] = 
 def read_env_bool(name: str, required: bool = True, default: Optional[bool] = None) -> Option[bool]:
     def converter(x: str) -> bool:
         result = x.strip().lower()
-        if result in ["true", "1", "t"]:
+        if result in {"true", "1", "t"}:
             return True
-        if result in ["false", "0", "f"]:
+        if result in {"false", "0", "f"}:
             return False
         raise EnvVariableValueException(name, x, bool)
 
@@ -87,9 +87,7 @@ def _read_env(name: str, required: bool, default: Optional[T], convert: Callable
     if result is None:
         if required:
             raise MissingEnvVariableException(name)
-        if default is not None:
-            return Option.some(default)
-        return Option.none()
+        return Option.some(default) if default is not None else Option.none()
     return Option.some(convert(result))
 
 

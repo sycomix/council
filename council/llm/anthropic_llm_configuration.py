@@ -107,16 +107,18 @@ class AnthropicLLMConfiguration:
         return self._max_tokens
 
     def _read_optional_env(self):
-        self._temperature.from_env(_env_var_prefix + "LLM_TEMPERATURE")
-        self._top_p.from_env(_env_var_prefix + "LLM_TOP_P")
-        self._top_k.from_env(_env_var_prefix + "LLM_TOP_K")
-        self._timeout.from_env(_env_var_prefix + "LLM_TIMEOUT")
+        self._temperature.from_env(f"{_env_var_prefix}LLM_TEMPERATURE")
+        self._top_p.from_env(f"{_env_var_prefix}LLM_TOP_P")
+        self._top_k.from_env(f"{_env_var_prefix}LLM_TOP_K")
+        self._timeout.from_env(f"{_env_var_prefix}LLM_TIMEOUT")
 
     @staticmethod
     def from_env() -> AnthropicLLMConfiguration:
-        api_key = read_env_str(_env_var_prefix + "API_KEY").unwrap()
-        model = read_env_str(_env_var_prefix + "LLM_MODEL").unwrap()
-        max_tokens = read_env_int(_env_var_prefix + "LLM_MAX_TOKENS", required=False, default=300).unwrap()
+        api_key = read_env_str(f"{_env_var_prefix}API_KEY").unwrap()
+        model = read_env_str(f"{_env_var_prefix}LLM_MODEL").unwrap()
+        max_tokens = read_env_int(
+            f"{_env_var_prefix}LLM_MAX_TOKENS", required=False, default=300
+        ).unwrap()
         config = AnthropicLLMConfiguration(model=model, api_key=api_key, max_tokens=max_tokens)
         config._read_optional_env()
         return config

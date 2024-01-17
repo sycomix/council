@@ -90,9 +90,10 @@ class Budget:
         self._deadline = time.monotonic() + duration
         self._limits = []
         if limits is not None:
-            for limit in limits:
-                self._limits.append(Consumption(limit.value, limit.unit, limit.kind))
-
+            self._limits.extend(
+                Consumption(limit.value, limit.unit, limit.kind)
+                for limit in limits
+            )
         self._remaining = limits if limits is not None else []
 
     @property

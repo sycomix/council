@@ -150,13 +150,16 @@ class LLMController(ControllerBase):
     def _parse_response(self, context: AgentContext, response: str) -> List[Tuple[ExecutionUnit, int]]:
         parsed = [self._parse_line(context, line) for line in response.strip().splitlines()]
         filtered = [r.unwrap() for r in parsed if r.is_some()]
-        if len(filtered) == 0:
+        if not filtered:
             raise LLMParsingException("None of your response could be parsed. Follow exactly formatting instructions.")
 
         if self._top_k > 1:
             actual_chains = [item[0].chain.name for item in filtered]
-            missing_chains = [chain.name for chain in self._chains if chain.name not in actual_chains]
-            if len(missing_chains) > 0:
+            if missing_chains := [
+                chain.name
+                for chain in self._chains
+                if chain.name not in actual_chains
+            ]:
                 raise ControllerException(f"Missing scores for {missing_chains}. Follow exactly your instructions.")
 
         if len(filtered) != 1 and self._top_k == 1:

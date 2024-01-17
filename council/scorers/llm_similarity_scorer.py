@@ -89,8 +89,7 @@ class LLMSimilarityScorer(ScorerBase):
             self._expected,
         ]
 
-        result = [self._system_message, LLMMessage.user_message("\n".join(user_prompt))]
-        return result
+        return [self._system_message, LLMMessage.user_message("\n".join(user_prompt))]
 
     def _build_system_message(self) -> LLMMessage:
         system_prompt = [
@@ -108,7 +107,7 @@ class LLMSimilarityScorer(ScorerBase):
     def _parse_response(self, context: ContextBase, response: str) -> SimilarityScore:
         parsed = [self._parse_line(line) for line in response.strip().splitlines()]
         filtered = [r.unwrap() for r in parsed if r.is_some()]
-        if len(filtered) == 0:
+        if not filtered:
             raise LLMParsingException("None of your response could be parsed. Follow exactly formatting instructions.")
 
         similarity_score = filtered[0]

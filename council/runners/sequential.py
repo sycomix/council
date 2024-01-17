@@ -27,7 +27,4 @@ class Sequential(RunnerBase):
 
     @staticmethod
     def from_list(runners: Sequence[RunnerBase]) -> RunnerBase:
-        if len(runners) == 1:
-            return runners[0]
-
-        return Sequential(*runners)
+        return runners[0] if len(runners) == 1 else Sequential(*runners)

@@ -41,14 +41,12 @@ class GoogleNewsSearchEngine(ContextProvider):
                 page_num += 1
         except Exception as e:
             logging.error(f"An exception occurred while searching on google news {e}")
-            pass
-
-        if len(results) == 0:
+        if not results:
             logging.info("No Google News results were found")
             return []
 
         reference_results = []
-        for result in results[0:nb_results]:
+        for result in results[:nb_results]:
             response_reference = self.from_result(result)
             if response_reference is not None:
                 reference_results.append(response_reference)

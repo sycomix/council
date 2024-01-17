@@ -60,4 +60,4 @@ class LLMFallback(LLMBase):
 
     @staticmethod
     def _is_retryable(code: int) -> bool:
-        return code == 408 or code == 429 or code == 503 or code == 504
+        return code in {408, 429, 503, 504}

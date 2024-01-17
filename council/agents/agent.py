@@ -138,14 +138,11 @@ class Agent(Monitorable):
             group = groups.setdefault(key, [])
             group.extend(list(items))
 
-        keys = list(groups.keys())
-        keys.sort()
-
+        keys = sorted(groups.keys())
         result = []
         for key in keys:
             if key < 0:
-                for item in groups[key]:
-                    result.append([item])
+                result.extend([item] for item in groups[key])
             else:
                 result.append(groups[key])
 

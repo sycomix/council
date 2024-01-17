@@ -145,10 +145,11 @@ class AgentTestCase:
             duration = time.monotonic() - start_time
 
         try:
-            scores = []
             message = agent_result.try_best_message.unwrap()
-            for scorer in self._scorers:
-                scores.append(scorer.score(ScorerContext.empty(), message))
+            scores = [
+                scorer.score(ScorerContext.empty(), message)
+                for scorer in self._scorers
+            ]
             case_result.set_success(message.message, duration, scores)
             return case_result
         except ScorerException:
@@ -170,21 +171,15 @@ class AgentTestSuiteResult:
         self._results.append(result)
 
     def to_dict(self) -> Dict[str, Any]:
-        results = []
-        for item in self._results:
-            results.append(item.to_dict())
-        result = {"results": results}
-        return result
+        results = [item.to_dict() for item in self._results]
+        return {"results": results}
 
 
 class AgentTestSuite:
     _test_cases: List[AgentTestCase]
 
     def __init__(self, test_cases: Optional[List[AgentTestCase]] = None):
-        if test_cases is not None:
-            self._test_cases = test_cases
-        else:
-            self._test_cases = []
+        self._test_cases = test_cases if test_cases is not None else []
 
     def add_test_case(self, prompt: str, scorers: List[ScorerBase]) -> "AgentTestSuite":
         self._test_cases.append(AgentTestCase(prompt, scorers))

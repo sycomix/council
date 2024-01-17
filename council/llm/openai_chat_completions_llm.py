@@ -169,5 +169,4 @@ class OpenAIChatCompletionsModel(LLMBase):
         if response.status_code != httpx.codes.OK:
             raise LLMCallException(response.status_code, response.text)
 
-        r = OpenAIChatCompletionsResult.from_dict(response.json())
-        return r
+        return OpenAIChatCompletionsResult.from_dict(response.json())

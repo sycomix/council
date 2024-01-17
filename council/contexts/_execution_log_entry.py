@@ -91,7 +91,7 @@ class ExecutionLogEntry:
         return result
 
     def _log_message(self, level: str, message: str, *args: Any) -> None:
-        msg = message % args if len(args) > 0 else message
+        msg = message % args if args else message
         self._logs.append((datetime.now(timezone.utc), level, msg))
 
     def log_debug(self, message: str, *args: Any) -> None:

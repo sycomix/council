@@ -69,8 +69,7 @@ class LLMEvaluator(EvaluatorBase):
             response = llm_result.first_choice
             context.logger.debug(f"llm response: {response}")
             try:
-                parse_response = self._parse_response(context, response, chain_results)
-                return parse_response
+                return self._parse_response(context, response, chain_results)
             except LLMParsingException as e:
                 assistant_message = f"Your response is not correctly formatted:\n{response}"
                 new_messages = self._handle_error(e, assistant_message, context)
@@ -91,7 +90,7 @@ class LLMEvaluator(EvaluatorBase):
     ) -> List[ScoredChatMessage]:
         parsed = [self._parse_line(line) for line in response.strip().splitlines()]
         grades = [r.unwrap() for r in parsed if r.is_some()]
-        if len(grades) == 0:
+        if not grades:
             raise LLMParsingException("None of your grade could be parsed. Follow exactly formatting instructions.")
 
         scored_messages = []
@@ -111,7 +110,7 @@ class LLMEvaluator(EvaluatorBase):
             missing_msg = f"Missing grade for the answers with indexes {missing_indexes}."
             raise EvaluatorException(f"Grade ALL {len(chain_results)} answers. {missing_msg}")
 
-        if len(missing_indexes) > 0:
+        if missing_indexes:
             missing_msg = f"Missing grade for the answer with index {missing_indexes[0]}."
             raise EvaluatorException(f"Grade ALL {len(chain_results)} answers. {missing_msg}")
 

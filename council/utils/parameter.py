@@ -24,7 +24,7 @@ def prefix_validator(value: str) -> Validator:
 
 
 def not_empty_validator(x: str):
-    if len(x.strip()) == 0:
+    if not x.strip():
         raise ValueError("must not be empty")
 
 
